@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomi Tubuh Manusia — Atlas Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0c1a14;
+  --paper: #f5f0e8;
+  --cream: #ede8dc;
+  --gold: #c8953a;
+  --gold2: #e8b84b;
+  --red: #c0392b;
+  --green: #1a6b3c;
+  --blue: #1a4a7a;
+  --purple: #5a2d82;
+  --orange: #c0581a;
+  --teal: #1a7a6e;
+  --rose: #8b2252;
+  --muted: #7a6a58;
+  --border: #c8b898;
+  --shadow: rgba(12,26,20,0.15);
+}
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Aged paper texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(200,149,58,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(26,74,122,0.05) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px 40px 24px;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold2), var(--gold), transparent);
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title-block {}
+.title-en {
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.title-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--paper);
+}
+.title-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(245,240,232,0.55);
+  margin-top: 4px;
+}
+
+.header-stats {
+  display: flex;
+  gap: 32px;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  color: var(--gold2);
+  font-weight: 700;
+  display: block;
+}
+.stat-lbl {
+  font-size: 10px;
+  color: rgba(245,240,232,0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ===== TABS ===== */
+.tabs-bar {
+  background: var(--ink);
+  border-bottom: 1px solid #1e2e24;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  scrollbar-width: none;
+  padding: 0 40px;
+  max-width: 100%;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 14px 22px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.45);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.25s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover { color: rgba(245,240,232,0.75); }
+.tab-btn.active {
+  color: var(--gold2);
+  border-bottom-color: var(--gold2);
+}
+
+.tab-icon { font-size: 14px; }
+
+/* ===== CONTENT WRAPPER ===== */
+.content-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== SECTION PAGES ===== */
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== OVERVIEW PAGE ===== */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+/* Body illustration */
+.body-figure {
+  position: sticky;
+  top: 80px;
+}
+
+.body-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.body-svg-wrap {
+  position: relative;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.06), 0 4px 20px var(--shadow);
+}
+
+.body-svg-wrap svg {
+  width: 100%;
+  max-width: 260px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* System cards grid */
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.sys-card {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.sys-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--card-color, var(--gold));
+}
+
+.sys-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px var(--shadow);
+  border-color: var(--card-color, var(--gold));
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.card-latin {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #4a3e30;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card-tag {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(0,0,0,0.04);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  font-size: 18px;
+  color: var(--border);
+  transition: all 0.2s;
+}
+
+.sys-card:hover .card-arrow {
+  color: var(--card-color, var(--gold));
+  transform: translateX(4px);
+}
+
+/* ===== DETAIL PAGE ===== */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+.detail-main {}
+
+.detail-hero {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--sys-color, var(--gold));
+}
+
+.detail-hero-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.detail-big-icon {
+  width: 72px; height: 72px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+}
+
+.detail-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.detail-latin-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.detail-desc {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #3a2e20;
+}
+
+/* Sections */
+.section-block {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sec-title span { font-size: 18px; }
+
+/* How it works steps */
+.steps-list {
+  list-style: none;
+  counter-reset: steps;
+}
+
+.step-item {
+  counter-increment: steps;
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(200,184,152,0.5);
+}
+
+.step-item:last-child { border-bottom: none; }
+
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--sys-color, var(--gold));
+  color: white;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {}
+.step-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.step-desc {
+  font-size: 13px;
+  color: #5a4a38;
+  line-height: 1.7;
+}
+
+/* Organs table */
+.organs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.organs-table th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.organs-table td {
+  padding: 12px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(200,184,152,0.4);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.organs-table td:first-child {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.organs-table td:nth-child(2) { color: var(--muted); font-style: italic; font-size: 12px; }
+.organs-table td:nth-child(3) { color: #4a3e30; }
+
+.organs-table tr:hover td { background: rgba(200,184,152,0.15); }
+
+/* Diseases list */
+.disease-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.disease-card {
+  background: rgba(192,57,43,0.06);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-radius: 4px;
+  padding: 14px;
+}
+
+.disease-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+
+.disease-desc {
+  font-size: 12px;
+  color: #5a3a30;
+  line-height: 1.6;
+}
+
+/* Facts side panel */
+.detail-sidebar {}
+
+.fact-panel {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  padding: 28px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 80px;
+}
+
+.fact-panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--gold2);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.fact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 12px;
+}
+
+.fact-item:last-child { border-bottom: none; }
+
+.fact-key {
+  font-size: 11px;
+  color: rgba(245,240,232,0.5);
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.fact-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--gold2);
+  font-weight: 700;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.tip-box {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--green);
+  border-radius: 4px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.tip-head {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.tip-text {
+  font-size: 13px;
+  color: #3a4a3a;
+  line-height: 1.7;
+}
+
+/* Back btn */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 28px;
+  margin-top: 28px;
+}
+
+.back-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--cream);
+}
+
+/* Page header */
+.page-header {
+  padding: 32px 0 0;
+  margin-bottom: 8px;
+}
+
+.page-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Process Flow */
+.flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.flow-container::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 32px;
+  bottom: 32px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--sys-color, var(--gold)), transparent);
+}
+
+.flow-step {
+  display: flex;
+  gap: 20px;
+  padding: 16px 0;
+  position: relative;
+}
+
+.flow-num {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--sys-color, var(--gold));
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 4px var(--cream), 0 0 0 5px var(--border);
+}
+
+.flow-body {}
+.flow-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+.flow-text {
+  font-size: 13px;
+  color: #4a3e30;
+  line-height: 1.75;
+}
+
+/* Interaction diagram */
+.interaction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.inter-card {
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  text-align: center;
+}
+
+.inter-icon { font-size: 28px; margin-bottom: 8px; }
+.inter-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.inter-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+/* Divider ornament */
+.ornament {
+  text-align: center;
+  color: var(--border);
+  font-size: 18px;
+  margin: 8px 0;
+  letter-spacing: 12px;
+}
+
+/* QUIZ embedded */
+.quiz-section {
+  background: var(--ink);
+  border-radius: 4px;
+  padding: 28px;
+  color: var(--paper);
+  margin-top: 20px;
+}
+
+.quiz-q {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--gold2);
+}
+
+.quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.quiz-opt {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--paper);
+  text-align: left;
+  font-family: 'Barlow', sans-serif;
+}
+
+.quiz-opt:hover { background: rgba(255,255,255,0.12); border-color: var(--gold); }
+.quiz-opt.correct { background: rgba(26,107,60,0.3); border-color: var(--green); color: #90e6b0; }
+.quiz-opt.wrong { background: rgba(192,57,43,0.3); border-color: var(--red); color: #ffb4a8; }
+
+.quiz-feedback { margin-top: 14px; font-size: 13px; min-height: 20px; }
+.quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+.quiz-progress { font-size: 12px; color: rgba(245,240,232,0.4); }
+.quiz-next {
+  padding: 8px 20px;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: none;
+  font-family: 'Barlow', sans-serif;
+}
+
+.quiz-next:hover { background: var(--gold2); }
+
+/* Responsive */
+@media (max-width: 960px) {
+  .content-wrap { padding: 0 20px 60px; }
+  .overview-grid { grid-template-columns: 1fr; }
+  .body-figure { position: static; display: none; }
+  .detail-layout { grid-template-columns: 1fr; }
+  .detail-sidebar { order: -1; }
+  .fact-panel { position: static; }
+  .disease-grid { grid-template-columns: 1fr; }
+  .interaction-grid { grid-template-columns: repeat(2,1fr); }
+  .tabs-bar { padding: 0 20px; }
+  header { padding: 20px; }
+  .title-main { font-size: 28px; }
+  .header-stats { gap: 16px; }
+  .quiz-opts { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="title-block">
+      <div class="title-en">Atlas Interaktif</div>
+      <div class="title-main">Anatomi Tubuh Manusia</div>
+      <div class="title-sub">Corpus Humanum — Penjelasan Lengkap & Cara Kerja</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat">
+        <span class="stat-num">11</span>
+        <span class="stat-lbl">Sistem Utama</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">78</span>
+        <span class="stat-lbl">Organ Vital</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">37T</span>
+        <span class="stat-lbl">Sel Tubuh</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">206</span>
+        <span class="stat-lbl">Tulang</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-bar" id="tabsBar">
+  <button class="tab-btn active" onclick="showPage('overview')" id="tab-overview">
+    <span class="tab-icon">🫀</span> Gambaran Umum
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('kardio')" id="tab-kardio">
+    <span class="tab-icon">❤️</span> Kardiovaskular
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('saraf')" id="tab-saraf">
+    <span class="tab-icon">🧠</span> Saraf
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('napas')" id="tab-napas">
+    <span class="tab-icon">🫁</span> Pernapasan
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('cerna')" id="tab-cerna">
+    <span class="tab-icon">🫃</span> Pencernaan
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('rangka')" id="tab-rangka">
+    <span class="tab-icon">🦴</span> Rangka
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('otot')" id="tab-otot">
+    <span class="tab-icon">💪</span> Otot
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('ekskresi')" id="tab-ekskresi">
+    <span class="tab-icon">🫘</span> Ekskresi
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('endokrin')" id="tab-endokrin">
+    <span class="tab-icon">⚗️</span> Endokrin
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('imun')" id="tab-imun">
+    <span class="tab-icon">🛡️</span> Imun
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('kulit')" id="tab-kulit">
+    <span class="tab-icon">🖐️</span> Integumen
+  </button>
+  <button class="tab-btn" onclick="showSystemDetail('repro')" id="tab-repro">
+    <span class="tab-icon">🧬</span> Reproduksi
+  </button>
+</div>
+
+<div class="content-wrap">
+
+<!-- ========================= OVERVIEW PAGE ========================= -->
+<div class="page active" id="page-overview">
+  <div class="page-header">
+    <div class="page-label">Pengantar Anatomi</div>
+    <div class="page-title">Sistem-Sistem dalam Tubuh Manusia</div>
+  </div>
+
+  <div class="overview-grid">
+    <!-- Body figure -->
+    <div class="body-figure">
+      <div class="body-title">Corpus Humanum</div>
+      <div class="body-svg-wrap">
+        <svg viewBox="0 0 200 520" xmlns="http://www.w3.org/2000/svg">
+          <!-- Head -->
+          <ellipse cx="100" cy="48" rx="36" ry="42" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <ellipse cx="100" cy="50" rx="28" ry="32" fill="none" stroke="#b89a78" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <!-- Eyes -->
+          <ellipse cx="88" cy="44" rx="5" ry="4" fill="white" stroke="#9a7850" stroke-width="1"/>
+          <ellipse cx="112" cy="44" rx="5" ry="4" fill="white" stroke="#9a7850" stroke-width="1"/>
+          <circle cx="88" cy="44" r="2.5" fill="#4a2a10"/>
+          <circle cx="112" cy="44" r="2.5" fill="#4a2a10"/>
+          <!-- Nose -->
+          <path d="M97 52 Q100 58 103 52" fill="none" stroke="#9a7850" stroke-width="1"/>
+          <!-- Mouth -->
+          <path d="M93 62 Q100 68 107 62" fill="none" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Neck -->
+          <rect x="90" y="87" width="20" height="22" rx="4" fill="#e8c89a" stroke="#9a7850" stroke-width="1.2"/>
+          <!-- Shoulders & Torso -->
+          <path d="M50 108 Q36 118 32 145 L32 260 Q32 275 50 278 L150 278 Q168 275 168 260 L168 145 Q164 118 150 108 Z" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Collarbone -->
+          <path d="M72 109 Q100 118 128 109" fill="none" stroke="#b89a78" stroke-width="1" stroke-dasharray="2,2"/>
+          <!-- Chest muscles -->
+          <path d="M72 130 Q100 145 128 130 L128 170 Q100 180 72 170 Z" fill="none" stroke="#b89a78" stroke-width="0.8"/>
+          <!-- Abs -->
+          <ellipse cx="100" cy="200" rx="22" ry="8" fill="none" stroke="#b89a78" stroke-width="0.7"/>
+          <ellipse cx="100" cy="218" rx="20" ry="7" fill="none" stroke="#b89a78" stroke-width="0.7"/>
+          <ellipse cx="100" cy="234" rx="18" ry="6" fill="none" stroke="#b89a78" stroke-width="0.7"/>
+          <!-- Spine line -->
+          <line x1="100" y1="109" x2="100" y2="278" stroke="#b89a78" stroke-width="0.5" stroke-dasharray="2,3"/>
+          <!-- Left arm -->
+          <path d="M50 115 Q26 130 20 195 Q18 228 24 258 L36 272 L46 268 L38 215 Q46 158 62 130" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Left hand -->
+          <ellipse cx="30" cy="270" rx="13" ry="9" fill="#e8c89a" stroke="#9a7850" stroke-width="1.2"/>
+          <!-- Right arm -->
+          <path d="M150 115 Q174 130 180 195 Q182 228 176 258 L164 272 L154 268 L162 215 Q154 158 138 130" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Right hand -->
+          <ellipse cx="170" cy="270" rx="13" ry="9" fill="#e8c89a" stroke="#9a7850" stroke-width="1.2"/>
+          <!-- Pelvis -->
+          <path d="M50 278 Q50 308 75 318 L125 318 Q150 308 150 278" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Left leg -->
+          <path d="M72 316 Q60 360 58 415 Q56 458 62 500 L82 500 L90 445 Q96 390 98 320" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Left foot -->
+          <ellipse cx="72" cy="504" rx="17" ry="8" fill="#e8c89a" stroke="#9a7850" stroke-width="1.2"/>
+          <!-- Right leg -->
+          <path d="M128 316 Q140 360 142 415 Q144 458 138 500 L118 500 L110 445 Q104 390 102 320" fill="#e8c89a" stroke="#9a7850" stroke-width="1.5"/>
+          <!-- Right foot -->
+          <ellipse cx="128" cy="504" rx="17" ry="8" fill="#e8c89a" stroke="#9a7850" stroke-width="1.2"/>
+
+          <!-- Organs visible -->
+          <!-- Brain -->
+          <ellipse cx="100" cy="44" rx="28" ry="30" fill="rgba(192,57,43,0.15)" stroke="rgba(192,57,43,0.4)" stroke-width="1"/>
+          <!-- Heart -->
+          <path d="M90 152 Q84 140 76 143 Q66 147 68 162 Q70 176 90 190 Q110 176 112 162 Q114 147 104 143 Q96 140 90 152Z" fill="rgba(192,57,43,0.3)" stroke="rgba(192,57,43,0.6)" stroke-width="1.2"/>
+          <!-- Lungs -->
+          <path d="M66 148 Q52 158 50 188 Q49 210 60 218 Q74 222 84 196 L84 148Z" fill="rgba(100,150,255,0.2)" stroke="rgba(100,150,255,0.5)" stroke-width="1"/>
+          <path d="M134 148 Q148 158 150 188 Q151 210 140 218 Q126 222 116 196 L116 148Z" fill="rgba(100,150,255,0.2)" stroke="rgba(100,150,255,0.5)" stroke-width="1"/>
+          <!-- Stomach -->
+          <ellipse cx="100" cy="218" rx="22" ry="17" fill="rgba(200,149,58,0.25)" stroke="rgba(200,149,58,0.5)" stroke-width="1"/>
+          <!-- Liver -->
+          <path d="M70 195 Q67 215 72 228 Q83 232 95 225 L95 195Z" fill="rgba(180,100,50,0.25)" stroke="rgba(180,100,50,0.5)" stroke-width="1"/>
+          <!-- Intestines -->
+          <path d="M78 240 Q100 250 122 240 Q130 262 110 270 Q100 275 90 270 Q70 262 78 240Z" fill="rgba(150,180,100,0.2)" stroke="rgba(150,180,100,0.4)" stroke-width="1"/>
+          <!-- Kidneys -->
+          <ellipse cx="78" cy="253" rx="10" ry="14" fill="rgba(150,80,200,0.2)" stroke="rgba(150,80,200,0.4)" stroke-width="1"/>
+          <ellipse cx="122" cy="253" rx="10" ry="14" fill="rgba(150,80,200,0.2)" stroke="rgba(150,80,200,0.4)" stroke-width="1"/>
+
+          <!-- Labels -->
+          <text x="148" y="46" font-size="7" fill="#8a5030" font-family="Cormorant Garamond, serif" font-style="italic">Otak</text>
+          <line x1="136" y1="46" x2="130" y2="46" stroke="#9a7850" stroke-width="0.7"/>
+
+          <text x="148" y="165" font-size="7" fill="#c0392b" font-family="Cormorant Garamond, serif" font-style="italic">Jantung</text>
+          <line x1="146" y1="163" x2="115" y2="163" stroke="#c0392b" stroke-width="0.7"/>
+
+          <text x="148" y="195" font-size="7" fill="#3060c0" font-family="Cormorant Garamond, serif" font-style="italic">Paru</text>
+          <line x1="146" y1="193" x2="138" y2="185" stroke="#3060c0" stroke-width="0.7"/>
+
+          <text x="148" y="220" font-size="7" fill="#c08020" font-family="Cormorant Garamond, serif" font-style="italic">Lambung</text>
+          <line x1="148" y1="218" x2="125" y2="218" stroke="#c08020" stroke-width="0.7"/>
+
+          <text x="148" y="258" font-size="7" fill="#805090" font-family="Cormorant Garamond, serif" font-style="italic">Ginjal</text>
+          <line x1="146" y1="256" x2="134" y2="254" stroke="#805090" stroke-width="0.7"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Systems grid -->
+    <div class="systems-grid" id="overviewCards"></div>
+  </div>
+</div>
+
+<!-- ========================= DETAIL PAGE ========================= -->
+<div class="page" id="page-detail">
+  <div id="detailContent"></div>
+</div>
+
+</div><!-- content-wrap -->
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const systemsData = {
+  kardio: {
+    name: 'Kardiovaskular',
+    latin: 'Systema Cardiovasculare',
+    icon: '❤️',
+    color: '#c0392b',
+    shortDesc: 'Sistem pemompa dan pengedar darah ke seluruh tubuh, mencakup jantung, arteri, vena, dan kapiler.',
+    fullDesc: `Sistem kardiovaskular adalah mesin pompa yang bekerja tanpa henti sejak sebelum kita lahir hingga napas terakhir. Jantung — organ seukuran kepalan tangan — memompa darah melalui jaringan pembuluh darah sepanjang ±96.500 km, mengedarkan oksigen, nutrisi, hormon, dan sel imun ke setiap sel dalam tubuh. Dalam satu menit, darah menyelesaikan satu siklus penuh melalui seluruh tubuh.`,
+    organs: [
+      { name: 'Jantung', latin: 'Cor', desc: 'Pompa otot 4 bilik yang memompa ±5 liter darah per menit' },
+      { name: 'Arteri Aorta', latin: 'Aorta', desc: 'Pembuluh darah terbesar yang membawa darah dari jantung' },
+      { name: 'Arteri', latin: 'Arteriae', desc: 'Pembuluh bermuskulatur kuat membawa darah beroksigen' },
+      { name: 'Vena Cava', latin: 'Vena Cava', desc: 'Vena terbesar mengembalikan darah dari tubuh ke jantung' },
+      { name: 'Vena', latin: 'Venae', desc: 'Pembuluh membawa darah miskin oksigen kembali ke jantung' },
+      { name: 'Kapiler', latin: 'Capillares', desc: 'Pembuluh terkecil tempat pertukaran gas dan nutrisi terjadi' },
+      { name: 'Sel Darah Merah', latin: 'Eritrosit', desc: 'Pembawa hemoglobin yang mengangkut oksigen dan CO₂' },
+      { name: 'Plasma Darah', latin: 'Plasma', desc: 'Cairan kekuningan pembawa sel darah, protein, dan nutrisi' },
+    ],
+    howItWorks: [
+      { title: 'Darah Kaya CO₂ Masuk ke Jantung Kanan', desc: 'Darah miskin oksigen dari seluruh tubuh mengalir melalui Vena Cava Superior dan Inferior ke Atrium Kanan (bilik atas), kemudian dipompa ke Ventrikel Kanan (bilik bawah).' },
+      { title: 'Sirkulasi Paru-Paru (Sirkuit Kecil)', desc: 'Ventrikel Kanan memompa darah melewati Arteri Pulmonalis ke paru-paru. Di alveoli, CO₂ dilepas dan O₂ diserap. Darah kaya oksigen kembali melalui Vena Pulmonalis ke Atrium Kiri.' },
+      { title: 'Darah Kaya O₂ Dipompa ke Seluruh Tubuh', desc: 'Atrium Kiri mendorong darah ke Ventrikel Kiri — bilik paling kuat. Ventrikel Kiri memompa darah dengan tekanan tinggi melalui Aorta ke seluruh penjuru tubuh.' },
+      { title: 'Pertukaran di Kapiler', desc: 'Di kapiler yang dindingnya hanya satu sel, oksigen dan nutrisi berdifusi ke sel-sel tubuh, sementara CO₂ dan limbah metabolisme masuk ke darah untuk dibawa kembali ke jantung.' },
+      { title: 'Pengaturan Irama Jantung', desc: 'Simpul SA (Sinoatrial Node) di atrium kanan bertindak sebagai "alat pacu jantung" alami, mengirimkan impuls listrik untuk mengontrak jantung 60-100 kali per menit secara terkoordinasi.' },
+    ],
+    facts: [
+      { key: 'Detak per hari', val: '~100.000×' },
+      { key: 'Darah dipompa per hari', val: '7.500 L' },
+      { key: 'Panjang pembuluh darah', val: '96.500 km' },
+      { key: 'Volume darah normal', val: '4,5–5,5 L' },
+      { key: 'Tekanan darah normal', val: '120/80 mmHg' },
+      { key: 'Umur eritrosit', val: '120 hari' },
+    ],
+    diseases: [
+      { name: 'Penyakit Jantung Koroner', desc: 'Penyumbatan arteri koroner oleh plak lemak (aterosklerosis), menyebabkan serangan jantung' },
+      { name: 'Hipertensi', desc: 'Tekanan darah kronis di atas 140/90 mmHg, membebani jantung dan pembuluh darah' },
+      { name: 'Gagal Jantung', desc: 'Jantung tidak mampu memompa darah dengan efisien, menyebabkan kelelahan dan sesak napas' },
+      { name: 'Stroke', desc: 'Sumbatan atau pecahnya pembuluh darah di otak, merusak jaringan otak secara permanen' },
+    ],
+    interactions: [
+      { icon: '🫁', name: 'Pernapasan', desc: 'Pertukaran O₂/CO₂ di paru' },
+      { icon: '🧠', name: 'Saraf', desc: 'Mengontrol detak & tekanan darah' },
+      { icon: '🫘', name: 'Ekskresi', desc: 'Ginjal saring limbah dari darah' },
+    ],
+    tip: 'Untuk menjaga kesehatan jantung: lakukan olahraga aerobik minimal 150 menit per minggu, kurangi konsumsi garam dan lemak jenuh, tidak merokok, dan kelola stres dengan baik.',
+    quizzes: [
+      { q: 'Berapa bilik (ruang) yang dimiliki jantung manusia?', opts: ['2', '3', '4', '6'], ans: 2 },
+      { q: 'Pembuluh darah apa yang membawa darah KELUAR dari jantung?', opts: ['Vena', 'Arteri', 'Kapiler', 'Limfe'], ans: 1 },
+      { q: 'Di mana letak "alat pacu jantung" alami (pacemaker)?', opts: ['Ventrikel kiri', 'Simpul SA di atrium kanan', 'Aorta', 'Katup mitral'], ans: 1 },
+    ]
+  },
+
+  saraf: {
+    name: 'Saraf',
+    latin: 'Systema Nervosum',
+    icon: '🧠',
+    color: '#1a4a7a',
+    shortDesc: 'Pusat komando tubuh yang memproses informasi dan mengoordinasikan semua fungsi melalui impuls listrik-kimia.',
+    fullDesc: `Sistem saraf adalah jaringan komunikasi paling kompleks di alam semesta yang kita kenal. Otak manusia mengandung sekitar 86 miliar neuron, masing-masing terhubung dengan hingga 10.000 neuron lain, menciptakan lebih dari 100 triliun koneksi sinaptik. Sistem ini memproses jutaan input sensorik setiap detik, mengendalikan gerakan, menyimpan kenangan, menghasilkan emosi, dan mengatur seluruh fungsi tubuh — semuanya dengan konsumsi energi setara 20 watt.`,
+    organs: [
+      { name: 'Otak Besar (Serebrum)', latin: 'Cerebrum', desc: 'Pusat berpikir, memori, bahasa, gerakan sadar, dan kesadaran' },
+      { name: 'Otak Kecil (Serebelum)', latin: 'Cerebellum', desc: 'Mengkoordinasikan gerakan, keseimbangan, dan postur tubuh' },
+      { name: 'Batang Otak', latin: 'Truncus Encephali', desc: 'Mengontrol napas, detak jantung, tidur, dan refleks vital' },
+      { name: 'Sumsum Tulang Belakang', latin: 'Medulla Spinalis', desc: 'Jalur komunikasi antara otak dan tubuh, pusat refleks' },
+      { name: 'Neuron', latin: 'Neuron', desc: 'Sel saraf khusus yang mengirimkan impuls listrik-kimia' },
+      { name: 'Sinaps', latin: 'Synapsis', desc: 'Celah antara neuron tempat neurotransmiter berpindah' },
+      { name: 'Saraf Tepi', latin: 'Nervi Peripherales', desc: '31 pasang saraf spinal dan 12 pasang saraf kranial' },
+      { name: 'Sistem Saraf Otonom', latin: 'Systema Autonomicum', desc: 'Mengontrol organ involunter: jantung, usus, kelenjar' },
+    ],
+    howItWorks: [
+      { title: 'Rangsang Diterima Reseptor Sensorik', desc: 'Mata, telinga, kulit, hidung, dan lidah menerima rangsangan dari lingkungan. Sel reseptor mengubah rangsangan fisik/kimia menjadi impuls listrik (potensial aksi) di neuron sensorik aferen.' },
+      { title: 'Impuls Dihantarkan ke Pusat', desc: 'Impuls listrik merambat sepanjang akson neuron menuju sumsum tulang belakang atau langsung ke otak. Kecepatan hantaran bervariasi dari 0,5–120 m/detik tergantung diameter akson dan ada tidaknya selubung mielin.' },
+      { title: 'Pemrosesan di Otak', desc: 'Korteks serebri memproses informasi sensorik. Talamus bertindak sebagai "gerbang" yang menyaring dan meneruskan sinyal ke area otak yang tepat. Hipotalamus mengintegrasikan respons hormonal dan otonom.' },
+      { title: 'Transmisi Sinaptik', desc: 'Saat impuls mencapai ujung akson (terminal bouton), gelembung sinaptik melepaskan neurotransmiter (dopamin, serotonin, asetilkolin, dll.) ke celah sinaps. Neurotransmiter berikatan dengan reseptor di neuron penerima, melanjutkan sinyal.' },
+      { title: 'Respons Motorik Dikirim', desc: 'Korteks motorik mengirimkan perintah ke neuron motorik eferen yang berjalan ke otot atau kelenjar melalui sumsum tulang belakang dan saraf tepi. Neuromuscular junction memicu kontraksi otot yang diperlukan.' },
+      { title: 'Plastisitas Neural', desc: 'Setiap pengalaman memperkuat atau melemahkan koneksi sinaptik (Long-Term Potentiation). Inilah dasar belajar dan memori: "Neurons that fire together, wire together."' },
+    ],
+    facts: [
+      { key: 'Jumlah neuron', val: '86 miliar' },
+      { key: 'Koneksi sinaptik', val: '100 triliun' },
+      { key: 'Berat otak dewasa', val: '1,3–1,4 kg' },
+      { key: 'Kecepatan impuls maks', val: '431 km/jam' },
+      { key: 'Konsumsi energi otak', val: '20% total energi' },
+      { key: 'Kapasitas memori', val: '2,5 Petabyte' },
+    ],
+    diseases: [
+      { name: 'Alzheimer', desc: 'Akumulasi plak amiloid merusak neuron, menyebabkan hilangnya memori dan fungsi kognitif progresif' },
+      { name: 'Stroke', desc: 'Kematian jaringan otak akibat penyumbatan atau perdarahan pembuluh darah otak' },
+      { name: 'Epilepsi', desc: 'Gangguan aktivitas listrik otak yang tidak normal, menyebabkan kejang berulang' },
+      { name: 'Parkinson', desc: 'Degenerasi neuron dopaminergik di substansia nigra menyebabkan tremor dan kekakuan gerak' },
+    ],
+    interactions: [
+      { icon: '❤️', name: 'Kardiovaskular', desc: 'Kontrol detak & tekanan darah' },
+      { icon: '⚗️', name: 'Endokrin', desc: 'Hipotalamus & hipofisis atur hormon' },
+      { icon: '💪', name: 'Otot', desc: 'Sinyal motorik gerakkan otot' },
+    ],
+    tip: 'Jaga kesehatan otak: tidur cukup 7-9 jam (otak membersihkan limbah saat tidur), lakukan latihan fisik (meningkatkan BDNF), belajar hal baru, dan jaga hubungan sosial yang bermakna.',
+    quizzes: [
+      { q: 'Sel yang menyusun sistem saraf disebut?', opts: ['Eritrosit', 'Neuron', 'Miosit', 'Hepatosit'], ans: 1 },
+      { q: 'Bagian otak yang mengatur keseimbangan dan koordinasi adalah?', opts: ['Serebrum', 'Hipotalamus', 'Serebelum', 'Talamus'], ans: 2 },
+      { q: 'Zat kimia yang dikirim antar neuron di celah sinaps disebut?', opts: ['Hormon', 'Enzim', 'Neurotransmiter', 'Elektrolit'], ans: 2 },
+    ]
+  },
+
+  napas: {
+    name: 'Pernapasan',
+    latin: 'Systema Respiratorium',
+    icon: '🫁',
+    color: '#1a4a7a',
+    shortDesc: 'Sistem pengambilan oksigen dan pembuangan karbon dioksida melalui pertukaran gas di alveoli paru-paru.',
+    fullDesc: `Sistem pernapasan adalah jembatan antara tubuh dan atmosfer. Setiap hari, kita menarik napas sekitar 20.000 kali, menghirup udara melalui saluran yang canggih sebelum mencapai sekitar 300 juta alveoli di paru-paru — kantung-kantung kecil yang jika dibentangkan luasnya setara lapangan tenis (70 m²). Di sinilah keajaiban terjadi: oksigen menembus dinding selapis sel untuk memasuki darah, sementara karbon dioksida mengambil jalan sebaliknya.`,
+    organs: [
+      { name: 'Hidung & Rongga Nasal', latin: 'Cavum Nasi', desc: 'Menyaring, menghangatkan, dan melembapkan udara masuk' },
+      { name: 'Faring', latin: 'Pharynx', desc: 'Persimpangan saluran napas dan pencernaan di belakang mulut' },
+      { name: 'Laring', latin: 'Larynx', desc: 'Kotak suara yang juga melindungi trakea dari aspirasi makanan' },
+      { name: 'Trakea', latin: 'Trachea', desc: 'Pipa tulang rawan ±12 cm menghubungkan laring ke bronkus' },
+      { name: 'Bronkus', latin: 'Bronchi', desc: 'Cabang trakea yang masuk ke masing-masing paru-paru' },
+      { name: 'Bronkiolus', latin: 'Bronchioli', desc: 'Saluran sangat kecil tanpa tulang rawan di dalam paru' },
+      { name: 'Alveoli', latin: 'Alveoli', desc: 'Kantung udara kecil tempat pertukaran gas berlangsung' },
+      { name: 'Diafragma', latin: 'Diaphragma', desc: 'Otot kubah utama pernapasan di bawah paru-paru' },
+    ],
+    howItWorks: [
+      { title: 'Inhalasi — Udara Masuk', desc: 'Diafragma berkontraksi dan mendatar, otot interkostal mengangkat tulang rusuk ke atas dan keluar. Volume rongga dada meningkat, tekanan turun di bawah tekanan atmosfer, sehingga udara terhisap masuk melalui hidung/mulut.' },
+      { title: 'Penyaringan dan Kondisi Udara', desc: 'Rambut hidung dan mukosa menyaring partikel besar. Silia menggerakkan lendir yang menjebak debu ke tenggorokan. Pembuluh darah di mukosa menghangatkan udara mendekati suhu tubuh dan melembapkannya hingga 100% RH sebelum mencapai paru.' },
+      { title: 'Distribusi Udara di Paru', desc: 'Udara melewati trakea → bronkus kiri/kanan → bronkiolus → duktus alveolar → alveoli. Bronkus bercabang sekitar 23 kali (generasi) sebelum mencapai alveoli, meningkatkan luas permukaan secara dramatis.' },
+      { title: 'Pertukaran Gas di Alveoli (Difusi)', desc: 'Tekanan parsial O₂ di alveoli (104 mmHg) lebih tinggi dari darah vena (40 mmHg), sehingga O₂ berdifusi ke dalam kapiler. Sebaliknya, CO₂ darah (45 mmHg) berdifusi ke alveoli (40 mmHg). Proses ini hampir seketika karena dinding alveoli-kapiler hanya 0,5 mikrometer.' },
+      { title: 'Pengangkutan Gas dalam Darah', desc: 'O₂ diikat hemoglobin dalam eritrosit membentuk oksihemoglobin (97%) dan terlarut plasma (3%). CO₂ diangkut sebagai ion bikarbonat (70%), karboxyhemoglobin (23%), dan terlarut (7%). Darah beroksigen dikirim ke jantung kiri lalu seluruh tubuh.' },
+      { title: 'Ekshalasi — Udara Keluar', desc: 'Diafragma relaksasi dan naik, tulang rusuk turun, volume rongga dada mengecil, tekanan naik di atas atmosfer. Udara terdorong keluar membawa CO₂. Ekshalasi normal bersifat pasif (tidak butuh energi), berbeda dengan inhalasi yang aktif.' },
+    ],
+    facts: [
+      { key: 'Napas per hari', val: '~20.000×' },
+      { key: 'Luas permukaan alveoli', val: '70 m²' },
+      { key: 'Volume tidal (napas normal)', val: '500 ml' },
+      { key: 'Kapasitas paru total', val: '6 liter' },
+      { key: 'Jumlah alveoli', val: '300 juta' },
+      { key: 'Kecepatan bersin', val: '160 km/jam' },
+    ],
+    diseases: [
+      { name: 'Asma', desc: 'Peradangan dan penyempitan bronkiolus yang menyebabkan wheezing, sesak napas, dan batuk episodik' },
+      { name: 'PPOK', desc: 'Penyakit paru obstruktif kronik akibat kerusakan alveoli permanen (emfisema) dan bronkitis kronis' },
+      { name: 'Pneumonia', desc: 'Infeksi bakteri/virus/jamur di alveoli menyebabkan peradangan dan penumpukan cairan di paru' },
+      { name: 'Kanker Paru', desc: 'Pertumbuhan sel abnormal di jaringan paru, sering dikaitkan dengan merokok dan paparan karsinogen' },
+    ],
+    interactions: [
+      { icon: '❤️', name: 'Kardiovaskular', desc: 'Oksigenasi darah di kapiler paru' },
+      { icon: '🧠', name: 'Saraf', desc: 'Batang otak kontrol ritme napas' },
+      { icon: '💪', name: 'Otot', desc: 'Diafragma & interkostal gerakkan napas' },
+    ],
+    tip: 'Untuk kapasitas paru optimal: hindari rokok dan polusi, lakukan olahraga aerobik rutin, latih pernapasan diafragma (pernapasan perut), dan jaga lingkungan dalam ruangan tetap bersih.',
+    quizzes: [
+      { q: 'Di mana pertukaran gas (O₂ dan CO₂) terjadi?', opts: ['Bronkus', 'Trakea', 'Alveoli', 'Laring'], ans: 2 },
+      { q: 'Otot utama yang menggerakkan proses pernapasan adalah?', opts: ['Otot abdominal', 'Diafragma', 'Otot trapezius', 'Otot deltoid'], ans: 1 },
+      { q: 'Berapa luas permukaan alveoli jika dibentangkan?', opts: ['1 m²', '10 m²', '70 m²', '500 m²'], ans: 2 },
+    ]
+  },
+
+  cerna: {
+    name: 'Pencernaan',
+    latin: 'Systema Digestorium',
+    icon: '🫃',
+    color: '#c8953a',
+    shortDesc: 'Sistem pemrosesan makanan dari mulut hingga usus besar untuk menyerap nutrisi yang dibutuhkan tubuh.',
+    fullDesc: `Sistem pencernaan adalah pabrik kimia yang luar biasa — sebuah tabung berkelok sepanjang ±9 meter yang mengubah roti, daging, dan sayuran menjadi molekul-molekul kecil yang dapat masuk ke sel tubuh kita. Proses ini melibatkan pemecahan mekanik (mengunyah, peristaltik) dan kimiawi (enzim, asam, empedu) yang terkoordinasi sempurna, dan yang mencengangkan: 70% sel imun tubuh berada di usus.`,
+    organs: [
+      { name: 'Mulut', latin: 'Os/Cavum Oris', desc: 'Tempat pencernaan mekanik (gigi) dan kimiawi awal (amilase saliva)' },
+      { name: 'Esofagus', latin: 'Oesophagus', desc: 'Tabung otot 25 cm yang mendorong makanan ke lambung via peristaltik' },
+      { name: 'Lambung', latin: 'Ventriculus/Gaster', desc: 'Kantung berotot dengan asam HCl (pH 1-2) dan enzim pepsin' },
+      { name: 'Usus Halus', latin: 'Intestinum Tenue', desc: 'Tabung 6-7 meter dengan vili; 90% penyerapan nutrisi terjadi di sini' },
+      { name: 'Usus Besar', latin: 'Intestinum Crassum', desc: 'Menyerap air, elektrolit; tempat 38 triliun bakteri usus hidup' },
+      { name: 'Hati', latin: 'Hepar', desc: 'Kelenjar terbesar; metabolisme nutrisi, detoksifikasi, produksi empedu' },
+      { name: 'Kandung Empedu', latin: 'Vesica Biliaris', desc: 'Menyimpan empedu yang memecah lemak di usus halus' },
+      { name: 'Pankreas', latin: 'Pancreas', desc: 'Menghasilkan enzim pencernaan dan hormon (insulin, glukagon)' },
+    ],
+    howItWorks: [
+      { title: 'Ingesti & Pencernaan Mulut', desc: 'Gigi memotong dan menggiling makanan (mekanik). Kelenjar saliva menghasilkan 1-1,5 liter air liur per hari mengandung amilase yang memecah pati dan lipase yang memecah lemak. Lidah membentuk bolus dan mendorongnya ke faring.' },
+      { title: 'Menelan & Esofagus', desc: 'Refleks menelan menutup epiglotis (melindungi trakea). Gelombang peristaltik kontraksi otot esofagus mendorong bolus ke bawah dalam 8-10 detik. Sfingter esofagus bawah membuka untuk membiarkan makanan masuk ke lambung.' },
+      { title: 'Pencernaan di Lambung', desc: 'Lambung berkontraksi 3-4× per menit mengaduk makanan dengan HCl (membunuh bakteri, mengaktifkan pepsinogen) dan pepsin (memecah protein). Hasilnya — kimus (chyme) berupa bubur asam — secara bertahap dilepaskan ke duodenum.' },
+      { title: 'Pencernaan & Penyerapan di Usus Halus', desc: 'Duodenum menerima empedu dari hati (emulsifikasi lemak) dan enzim dari pankreas (protease, lipase, amilase). Jejunum dan ileum menyerap glukosa, asam amino, asam lemak, vitamin, dan mineral melalui jutaan vili dan mikrovili (brush border) yang meningkatkan luas permukaan 600×.' },
+      { title: 'Fermentasi & Penyerapan Air di Usus Besar', desc: 'Sisa makanan yang tidak dicerna (serat) difermentasi oleh 38 triliun bakteri menghasilkan vitamin K, B12, dan asam lemak rantai pendek. Usus besar menyerap kembali 90% cairan yang tersisa (1,5-2 liter), memadatkan feses.' },
+      { title: 'Peran Hati sebagai Pusat Metabolisme', desc: 'Semua nutrisi yang diserap usus dibawa langsung ke hati melalui vena porta. Hati memproses glukosa, asam amino, lemak; menyimpan glikogen; menetralkan racun dan obat-obatan; menghasilkan protein plasma; dan mengekskresikan bilirubin.' },
+    ],
+    facts: [
+      { key: 'Panjang total saluran cerna', val: '±9 meter' },
+      { key: 'Luas penyerapan usus halus', val: '250–400 m²' },
+      { key: 'Bakteri usus (microbiome)', val: '38 triliun' },
+      { key: 'Produksi asam lambung/hari', val: '1,5–3 liter' },
+      { key: 'Waktu transit makanan', val: '24–72 jam' },
+      { key: 'Sel imun di usus', val: '70% total' },
+    ],
+    diseases: [
+      { name: 'GERD', desc: 'Refluks asam lambung kronis ke esofagus menyebabkan heartburn dan kerusakan mukosa esofagus' },
+      { name: 'Maag/Gastritis', desc: 'Peradangan lapisan lambung oleh H. pylori, NSAID, atau stres berlebih' },
+      { name: 'Radang Usus Buntu', desc: 'Inflamasi apendiks yang dapat pecah dan menyebabkan peritonitis jika tidak ditangani' },
+      { name: 'Sirosis Hati', desc: 'Fibrosis hati akibat kerusakan kronis (alkohol, hepatitis), menurunkan fungsi hati secara progresif' },
+    ],
+    interactions: [
+      { icon: '⚗️', name: 'Endokrin', desc: 'Insulin/glukagon atur gula darah dari nutrisi' },
+      { icon: '🧠', name: 'Saraf', desc: 'Saraf vagus kontrol motilitas usus' },
+      { icon: '🛡️', name: 'Imun', desc: '70% sel imun tinggal di dinding usus' },
+    ],
+    tip: 'Jaga kesehatan pencernaan: konsumsi serat 25-35 gram per hari, minum air cukup (2 liter/hari), makan probiotik (yogurt, kimchi), kurangi makanan olahan, dan makan perlahan agar enzim saliva bekerja optimal.',
+    quizzes: [
+      { q: 'Di organ mana sebagian besar penyerapan nutrisi terjadi?', opts: ['Lambung', 'Usus besar', 'Usus halus', 'Esofagus'], ans: 2 },
+      { q: 'Enzim apa yang dihasilkan saliva untuk memecah pati?', opts: ['Pepsin', 'Lipase pankreas', 'Amilase', 'Tripsin'], ans: 2 },
+      { q: 'pH asam lambung mendekati angka?', opts: ['7 (netral)', '1-2 (sangat asam)', '5-6 (sedikit asam)', '8-9 (basa)'], ans: 1 },
+    ]
+  },
+
+  rangka: {
+    name: 'Rangka',
+    latin: 'Systema Skeletale',
+    icon: '🦴',
+    color: '#5a4a3a',
+    shortDesc: 'Kerangka struktural 206 tulang yang menopang tubuh, melindungi organ vital, dan memproduksi sel darah.',
+    fullDesc: `Sistem rangka adalah arsitektur hidup tubuh manusia. Jauh dari sekadar "kerangka mati", tulang adalah jaringan hidup yang aktif bermetabolisme, terus-menerus dibangun dan dirombak oleh sel osteoblas dan osteoklast. Tulang menyimpan 99% kalsium dan 85% fosfor tubuh, memproduksi sekitar 2 juta sel darah merah per detik di sumsum tulang merah, dan beradaptasi dengan beban mekanik yang diberikan kepadanya — itulah mengapa astronot kehilangan massa tulang di luar angkasa.`,
+    organs: [
+      { name: 'Tulang Kompak', latin: 'Os Compactum', desc: 'Lapisan padat luar tulang, tersusun dari unit-unit osteon (Haversian system)' },
+      { name: 'Tulang Spons', latin: 'Os Spongiosum', desc: 'Jaringan berongga di bagian dalam, berisi sumsum tulang merah' },
+      { name: 'Sumsum Tulang Merah', latin: 'Medulla Ossium Rubra', desc: 'Menghasilkan 2 juta eritrosit, leukosit, dan trombosit per detik' },
+      { name: 'Sumsum Tulang Kuning', latin: 'Medulla Ossium Flava', desc: 'Menyimpan lemak; dapat berubah jadi merah saat kebutuhan sel darah meningkat' },
+      { name: 'Periosteum', latin: 'Periosteum', desc: 'Membran luar pelindung tulang yang kaya saraf dan pembuluh darah' },
+      { name: 'Tulang Rawan', latin: 'Cartilago', desc: 'Jaringan lentur di sendi, hidung, telinga, dan cakram vertebra' },
+      { name: 'Sendi (Artikulasi)', latin: 'Articulatio', desc: 'Tempat dua atau lebih tulang bertemu, memungkinkan gerakan' },
+      { name: 'Ligamen', latin: 'Ligamentum', desc: 'Jaringan ikat kuat yang menghubungkan tulang ke tulang di sendi' },
+    ],
+    howItWorks: [
+      { title: 'Remodeling Tulang — Proses Seumur Hidup', desc: 'Osteoklas (sel perombak) terus-menerus melarutkan tulang lama dengan enzim asam, sementara osteoblas (sel pembangun) menyintesis matriks kolagen baru dan mendepositkan kalsium fosfat. Siklus ini memperbarui seluruh massa tulang setiap 10 tahun.' },
+      { title: 'Penghasil Sel Darah (Hematopoiesis)', desc: 'Sumsum tulang merah di tulang pipih (tulang dada, tulang panggul, rusuk, tengkorak) dan ujung tulang panjang mengandung sel induk hematopoietik yang berdiferensiasi menjadi eritrosit, trombosit, dan semua jenis leukosit.' },
+      { title: 'Regulasi Kalsium Darah', desc: 'Paratiroid hormon (PTH) merangsang osteoklas melepas kalsium dari tulang ke darah saat kadar Ca²⁺ rendah. Kalsitonin (dari tiroid) menekan osteoklas dan merangsang osteoblas untuk menyimpan kalsium kembali ke tulang saat kadar Ca²⁺ tinggi.' },
+      { title: 'Mekanisme Sendi Sinovial', desc: 'Permukaan tulang di sendi dilapisi tulang rawan hialin yang licin. Kapsul sendi menghasilkan cairan sinovial yang bertindak sebagai pelumas dan nutrisi tulang rawan (avaskular). Ligamen menahan tulang agar tidak bergerak berlebihan.' },
+      { title: 'Penyembuhan Tulang Patah', desc: '1) Hematoma terbentuk di tempat patahan. 2) Jaringan granulasi dan kalus kartilago menstabilkan patahan. 3) Kalus tulang keras menggantikan kartilago. 4) Remodeling akhir membentuk kembali arsitektur tulang normal dalam 3-6 bulan.' },
+    ],
+    facts: [
+      { key: 'Jumlah tulang dewasa', val: '206 tulang' },
+      { key: 'Jumlah tulang bayi baru lahir', val: '270–350' },
+      { key: 'Tulang terkecil di tubuh', val: 'Stapes (2,8 mm)' },
+      { key: 'Tulang terpanjang di tubuh', val: 'Femur (paha)' },
+      { key: 'Sel darah dibuat per detik', val: '2–3 juta' },
+      { key: 'Kekuatan tulang vs baja', val: '4× lebih kuat (per berat)' },
+    ],
+    diseases: [
+      { name: 'Osteoporosis', desc: 'Kepadatan tulang rendah akibat ketidakseimbangan remodeling, meningkatkan risiko patah tulang' },
+      { name: 'Artritis', desc: 'Peradangan sendi — osteoartritis (degenerasi tulang rawan) atau rheumatoid (autoimun)' },
+      { name: 'Skoliosis', desc: 'Kelengkungan tulang belakang lateral abnormal yang mempengaruhi postur dan pernapasan' },
+      { name: 'Osteomalasia', desc: 'Pelunakan tulang akibat defisiensi vitamin D yang mengganggu mineralisasi tulang' },
+    ],
+    interactions: [
+      { icon: '💪', name: 'Otot', desc: 'Otot melekat ke tulang untuk gerak' },
+      { icon: '❤️', name: 'Kardiovaskular', desc: 'Sumsum tulang produksi sel darah' },
+      { icon: '⚗️', name: 'Endokrin', desc: 'PTH & kalsitonin atur mineral tulang' },
+    ],
+    tip: 'Bangun tulang kuat: konsumsi kalsium 1000–1200 mg/hari (susu, ikan, sayuran hijau) dan vitamin D (paparan sinar matahari pagi). Latihan beban merangsang osteoblas memperkuat tulang.',
+    quizzes: [
+      { q: 'Di mana sel darah merah diproduksi?', opts: ['Hati', 'Sumsum tulang merah', 'Limpa', 'Kelenjar timus'], ans: 1 },
+      { q: 'Tulang terkecil di tubuh manusia bernama?', opts: ['Malleus', 'Incus', 'Stapes', 'Femur'], ans: 2 },
+      { q: 'Berapa jumlah tulang manusia dewasa?', opts: ['270', '206', '300', '180'], ans: 1 },
+    ]
+  },
+
+  otot: {
+    name: 'Otot',
+    latin: 'Systema Musculare',
+    icon: '💪',
+    color: '#c0581a',
+    shortDesc: 'Lebih dari 640 otot yang menghasilkan setiap gerakan tubuh, dari berkedip hingga berlari.',
+    fullDesc: `Sistem otot adalah motor tubuh. Lebih dari 640 otot menyusun sekitar 40% berat tubuh, dan mereka tidak hanya menggerakkan anggota tubuh — otot jantung memompa darah, otot polos menggerakkan makanan melalui usus, dan bahkan pembuluh darah berkontraksi untuk mengatur tekanan. Semua ini terjadi karena satu mekanisme fundamental: protein aktin dan miosin yang saling meluncur menghasilkan gaya.`,
+    organs: [
+      { name: 'Otot Rangka', latin: 'Musculus Skeletalis', desc: 'Otot lurik sadar; melekat ke tulang melalui tendon; 40% berat tubuh' },
+      { name: 'Otot Jantung', latin: 'Musculus Cardiacus', desc: 'Otot lurik tak sadar khusus; memiliki diskus interkalaris untuk sinkronisasi' },
+      { name: 'Otot Polos', latin: 'Musculus Laevis', desc: 'Otot tak lurik tak sadar di organ dalam, pembuluh darah, dan kulit' },
+      { name: 'Tendon', latin: 'Tendo', desc: 'Jaringan ikat kolagen kuat yang menghubungkan otot ke tulang' },
+      { name: 'Fasia', latin: 'Fascia', desc: 'Selubung jaringan ikat yang membungkus dan memisahkan otot' },
+      { name: 'Sarkomer', latin: 'Sarcomerum', desc: 'Unit fungsional terkecil kontraksi otot; berisi filamen aktin-miosin' },
+      { name: 'Neuromuscular Junction', latin: 'Junctio Neuromuscularis', desc: 'Sinaps antara neuron motorik dan sel otot; asetilkolin memicu kontraksi' },
+    ],
+    howItWorks: [
+      { title: 'Sinyal Saraf Datang', desc: 'Neuron motorik mengirimkan aksi potensial ke neuromuscular junction. Asetilkolin dilepaskan ke celah sinaptik, berikatan dengan reseptor di sarkolema (membran sel otot), memicu depolarisasi listrik.' },
+      { title: 'Pelepasan Kalsium', desc: 'Gelombang depolarisasi merambat ke dalam serat otot melalui tubulus T, memicu retikulum sarkoplasma melepaskan ion Ca²⁺ ke sitoplasma sel otot dalam jumlah besar.' },
+      { title: 'Sliding Filament Theory', desc: 'Ca²⁺ berikatan dengan troponin di filamen aktin, menyingkap tempat ikatan miosin. Kepala miosin berikatan dengan aktin, "mengayuh" (power stroke) menarik filamen aktin ke tengah sarkomer. Setiap siklus membutuhkan 1 molekul ATP.' },
+      { title: 'Kontraksi Penuh', desc: 'Ribuan sarkomer berkontraksi bersamaan sepanjang myofibril → satu sel otot berkontraksi → seluruh serat otot berkontraksi → motor unit bekerja → otot menghasilkan gaya. Kekuatan bergantung pada jumlah motor unit yang direkrut.' },
+      { title: 'Relaksasi Otot', desc: 'Saat sinyal berhenti, Ca²⁺ dipompa kembali ke retikulum sarkoplasma membutuhkan energi ATP. Tanpa Ca²⁺, tropomiosin menutup kembali tempat ikatan aktin-miosin, ikatan terlepas, dan filamen kembali ke posisi awal — otot relaks.' },
+      { title: 'Hipertrofi Otot (Pertumbuhan)', desc: 'Latihan beban merobek serat otot secara mikro. Sel satelit (stem cell otot) diaktifkan, mensintesis protein kontraktil baru, dan sel otot membesar (hipertrofi). Proses ini terjadi saat istirahat — itulah mengapa recovery sama pentingnya dengan latihan.' },
+    ],
+    facts: [
+      { key: 'Jumlah otot dalam tubuh', val: '640+' },
+      { key: 'Persentase berat tubuh', val: '~40%' },
+      { key: 'Otot terbesar', val: 'Gluteus maximus' },
+      { key: 'Otot terkecil', val: 'Stapedius (1,3 mm)' },
+      { key: 'Otot paling aktif', val: 'Otot mata (100.000×/hari)' },
+      { key: 'Suhu otot saat olahraga', val: 'Hingga 40°C+' },
+    ],
+    diseases: [
+      { name: 'Distrofi Muskular', desc: 'Mutasi genetik menyebabkan degenerasi progresif otot rangka; tipe Duchenne paling umum' },
+      { name: 'Tendinitis', desc: 'Peradangan tendon akibat penggunaan berlebihan atau cedera; paling sering di bahu, lutut, siku' },
+      { name: 'Kram Otot', desc: 'Kontraksi otot involunter dan menyakitkan; sering karena dehidrasi atau ketidakseimbangan elektrolit' },
+      { name: 'Miastenia Gravis', desc: 'Autoimun merusak reseptor asetilkolin di neuromuscular junction menyebabkan kelemahan otot' },
+    ],
+    interactions: [
+      { icon: '🦴', name: 'Rangka', desc: 'Otot melekat ke tulang via tendon' },
+      { icon: '🧠', name: 'Saraf', desc: 'Motor neuron kontrol kontraksi otot' },
+      { icon: '❤️', name: 'Kardiovaskular', desc: 'Darah suplai O₂ dan glukosa ke otot' },
+    ],
+    tip: 'Untuk otot sehat: protein 1,6–2,2 gram/kg berat badan per hari, latihan kekuatan progresif, tidur cukup (HGH dirilis saat tidur untuk perbaikan otot), dan jangan lewatkan pemanasan/pendinginan.',
+    quizzes: [
+      { q: 'Protein apa yang berkontraksi dalam sel otot?', opts: ['Kolagen & elastin', 'Aktin & miosin', 'Keratin & fibrin', 'Albumin & globulin'], ans: 1 },
+      { q: 'Apa yang menghubungkan otot dengan tulang?', opts: ['Ligamen', 'Tulang rawan', 'Tendon', 'Fasia'], ans: 2 },
+      { q: 'Ion apa yang memicu kontraksi otot?', opts: ['Natrium (Na⁺)', 'Kalium (K⁺)', 'Kalsium (Ca²⁺)', 'Magnesium (Mg²⁺)'], ans: 2 },
+    ]
+  },
+
+  ekskresi: {
+    name: 'Ekskresi',
+    latin: 'Systema Urinarium',
+    icon: '🫘',
+    color: '#5a2d82',
+    shortDesc: 'Sistem penyaringan darah dan pembuangan limbah metabolisme melalui pembentukan dan pengeluaran urin.',
+    fullDesc: `Setiap menit, sekitar 1,2 liter darah — hampir seperempat curah jantung — mengalir melalui ginjal untuk disaring. Dalam satu hari, ginjal memfiltrasi 180 liter cairan, namun 99% diserap kembali. Hanya 1–2 liter yang menjadi urin, mengandung produk limbah seperti urea, kreatinin, dan asam urat. Ginjal juga mengatur keseimbangan elektrolit, pH darah, tekanan darah, dan merangsang produksi sel darah merah — menjadikannya salah satu organ paling multifungsi.`,
+    organs: [
+      { name: 'Ginjal', latin: 'Ren', desc: 'Organ utama ekskresi; berisi ±1 juta nefron per ginjal untuk menyaring darah' },
+      { name: 'Nefron', latin: 'Nephron', desc: 'Unit fungsional ginjal: glomerulus + tubulus; tempat penyaringan dan reabsorpsi' },
+      { name: 'Ureter', latin: 'Ureter', desc: 'Dua saluran otot 25-30 cm membawa urin dari ginjal ke kandung kemih' },
+      { name: 'Kandung Kemih', latin: 'Vesica Urinaria', desc: 'Organ berotot yang menyimpan urin hingga 400-600 ml sebelum berkemih' },
+      { name: 'Uretra', latin: 'Urethra', desc: 'Saluran akhir untuk pengeluaran urin dari tubuh' },
+      { name: 'Glomerulus', latin: 'Glomerulus', desc: 'Gulungan kapiler di kapsul Bowman tempat filtrasi darah bertekanan tinggi' },
+    ],
+    howItWorks: [
+      { title: 'Filtrasi di Glomerulus', desc: 'Darah masuk ke glomerulus melalui arteriola aferen bertekanan tinggi. Tekanan memaksa air, glukosa, asam amino, ion, urea, dan kreatinin menembus dinding kapiler ke kapsul Bowman, membentuk filtrat. Sel darah merah dan protein plasma (terlalu besar) tetap di darah.' },
+      { title: 'Reabsorpsi di Tubulus Proksimal', desc: 'Sekitar 65% filtrat diserap kembali di tubulus proksimal: semua glukosa dan asam amino (transport aktif), Na⁺, Cl⁻, K⁺, dan air (osmosis). Proses ini membutuhkan banyak energi ATP dan sangat selektif.' },
+      { title: 'Loop Henle — Konsentrasi Urin', desc: 'Lengkung Henle menciptakan gradien osmotik di medulla ginjal. Segmen desenden permeabel terhadap air (air keluar), segmen asenden impermeabel terhadap air tetapi memompa Na⁺ dan Cl⁻ keluar. Ini memungkinkan ginjal membuat urin yang jauh lebih pekat dari plasma.' },
+      { title: 'Reabsorpsi & Sekresi di Tubulus Distal', desc: 'Hormon ADH (antidiuretik) mengontrol reabsorpsi air di sini. Aldosteron (dari adrenal) mengontrol reabsorpsi Na⁺ dan ekskresi K⁺. Tubulus distal juga menyekresikan ion hidrogen (H⁺) untuk mengatur pH darah.' },
+      { title: 'Pengumpulan dan Pembentukan Urin', desc: 'Duktus kolektivus mengumpulkan urin dari beberapa tubulus. Di sini, ADH dapat membuat duktus sangat permeabel terhadap air, mengkonsentrasikan urin lebih lanjut. Urin akhir mengalir ke pelvis renalis → ureter → kandung kemih.' },
+    ],
+    facts: [
+      { key: 'Darah disaring per hari', val: '180 liter' },
+      { key: 'Urin diproduksi per hari', val: '1–2 liter' },
+      { key: 'Nefron per ginjal', val: '1 juta' },
+      { key: 'Aliran darah ke ginjal', val: '1,2 L/menit' },
+      { key: 'Panjang tubulus per nefron', val: '55 mm' },
+      { key: 'Reabsorpsi cairan filtrat', val: '99%' },
+    ],
+    diseases: [
+      { name: 'Batu Ginjal', desc: 'Kristalisasi mineral (kalsium oksalat, asam urat) di pelvis renalis menyebabkan nyeri hebat kolik' },
+      { name: 'Gagal Ginjal', desc: 'Penurunan GFR di bawah 15 ml/menit; akut (tiba-tiba) atau kronis (progresif dari DM/hipertensi)' },
+      { name: 'ISK (Infeksi Saluran Kemih)', desc: 'Bakteri (umumnya E. coli) menginfeksi uretra, kandung kemih, atau ginjal; lebih sering pada wanita' },
+      { name: 'Sindrom Nefrotik', desc: 'Kerusakan glomerulus menyebabkan protein bocor ke urin (proteinuria masif) dan edema' },
+    ],
+    interactions: [
+      { icon: '❤️', name: 'Kardiovaskular', desc: 'Ginjal atur tekanan darah via renin' },
+      { icon: '⚗️', name: 'Endokrin', desc: 'ADH & aldosteron atur fungsi ginjal' },
+      { icon: '🦴', name: 'Rangka', desc: 'Eritropoietin ginjal stimulasi produksi darah' },
+    ],
+    tip: 'Jaga kesehatan ginjal: minum air putih 2–3 liter per hari, batasi garam dan protein hewani berlebih, kendalikan gula darah dan tekanan darah, hindari NSAID jangka panjang tanpa pengawasan dokter.',
+    quizzes: [
+      { q: 'Unit fungsional ginjal yang menyaring darah disebut?', opts: ['Alveolus', 'Nefron', 'Neuron', 'Vilus'], ans: 1 },
+      { q: 'Berapa liter darah yang disaring ginjal setiap harinya?', opts: ['5 liter', '18 liter', '180 liter', '1800 liter'], ans: 2 },
+      { q: 'Hormon apa yang mengontrol reabsorpsi air di tubulus ginjal?', opts: ['Insulin', 'ADH (Vasopresin)', 'Estrogen', 'Kortisol'], ans: 1 },
+    ]
+  },
+
+  endokrin: {
+    name: 'Endokrin',
+    latin: 'Systema Endocrinum',
+    icon: '⚗️',
+    color: '#1a6b3c',
+    shortDesc: 'Jaringan kelenjar yang menghasilkan dan mengedarkan hormon untuk mengregulasi hampir setiap fungsi tubuh.',
+    fullDesc: `Sistem endokrin adalah sistem komunikasi lambat-tetapi-presisi tubuh. Berbeda dengan sistem saraf yang menggunakan sinyal listrik dalam milidetik, kelenjar endokrin melepaskan hormon langsung ke aliran darah — molekul kimia pembawa pesan yang perlu waktu menit hingga jam untuk mencapai organ target. Namun efeknya bisa berlangsung berhari-hari. Hanya dengan kadar sepersejuta gram (nanogram), hormon dapat mengubah metabolisme, pertumbuhan, reproduksi, suasana hati, dan respons stres secara fundamental.`,
+    organs: [
+      { name: 'Hipofisis', latin: 'Glandula Pituitaria', desc: '"Master gland" di dasar otak; mengontrol kelenjar endokrin lainnya' },
+      { name: 'Hipotalamus', latin: 'Hypothalamus', desc: 'Penghubung sistem saraf-endokrin; melepas releasing hormones ke hipofisis' },
+      { name: 'Kelenjar Tiroid', latin: 'Glandula Thyroidea', desc: 'Menghasilkan T₃ & T₄ yang mengatur metabolisme seluruh tubuh' },
+      { name: 'Kelenjar Paratiroid', latin: 'Glandula Parathyroidea', desc: 'Memproduksi PTH untuk mengatur kadar kalsium dan fosfor darah' },
+      { name: 'Kelenjar Adrenal', latin: 'Glandula Suprarenalis', desc: 'Korteks: kortisol, aldosteron; Medulla: adrenalin (epinefrin), noradrenalin' },
+      { name: 'Pankreas (Endokrin)', latin: 'Pars Endocrina Pancreatis', desc: 'Pulau Langerhans menghasilkan insulin (B) dan glukagon (A) untuk gula darah' },
+      { name: 'Kelenjar Pineal', latin: 'Glandula Pinealis', desc: 'Menghasilkan melatonin untuk mengatur ritme sirkadian dan pola tidur' },
+      { name: 'Gonad', latin: 'Gonadae', desc: 'Ovarium (estrogen, progesteron) dan testis (testosteron) untuk reproduksi' },
+    ],
+    howItWorks: [
+      { title: 'Sintesis dan Penyimpanan Hormon', desc: 'Kelenjar endokrin mensintesis hormon dari prekursor (steroid dari kolesterol, peptida dari asam amino). Hormon peptida disimpan dalam vesikel sekretori dan dilepaskan saat dibutuhkan. Hormon steroid disintesis on-demand karena tidak bisa disimpan.' },
+      { title: 'Pelepasan Terkontrol — Umpan Balik Negatif', desc: 'Hipotalamus melepas CRH → Hipofisis anterior melepas ACTH → Korteks adrenal melepas kortisol. Ketika kadar kortisol tinggi, ia menghambat hipotalamus dan hipofisis untuk berhenti memproduksi CRH dan ACTH — inilah umpan balik negatif yang menjaga homeostasis.' },
+      { title: 'Transport dalam Darah', desc: 'Hormon peptida larut air dan beredar bebas dalam plasma. Hormon steroid (tidak larut air) diikat protein pembawa (binding proteins) dalam plasma. Hanya hormon bebas yang biologis aktif dapat masuk ke sel target.' },
+      { title: 'Interaksi dengan Sel Target', desc: 'Hormon peptida berikatan dengan reseptor di membran sel, mengaktifkan second messengers (cAMP, cGMP) yang memperkuat sinyal di dalam sel. Hormon steroid menembus membran dan berikatan dengan reseptor intraseluler, langsung mengatur transkripsi gen di nukleus.' },
+      { title: 'Regulasi Gula Darah (Contoh)', desc: 'Setelah makan, glukosa darah naik → sel Beta pankreas melepas insulin → insulin memicu sel hati dan otot menyerap glukosa dan mengubahnya jadi glikogen → gula darah turun. Saat puasa, glukosa darah turun → sel Alfa melepas glukagon → hati memecah glikogen → gula darah naik.' },
+    ],
+    facts: [
+      { key: 'Jumlah hormon yang diidentifikasi', val: '50+ jenis' },
+      { key: 'Konsentrasi hormon aktif', val: 'Nanogram/liter' },
+      { key: 'Waktu paruh hormon', val: 'Menit hingga hari' },
+      { key: 'Gula darah normal (puasa)', val: '70–100 mg/dL' },
+      { key: 'Hormon pertumbuhan puncak', val: 'Saat tidur nyenyak' },
+      { key: 'Melatonin puncak', val: '2–4 pagi' },
+    ],
+    diseases: [
+      { name: 'Diabetes Mellitus', desc: 'Tipe 1: autoimun hancurkan sel beta. Tipe 2: resistensi insulin. Keduanya menyebabkan hiperglikemia kronis' },
+      { name: 'Hipotiroidisme', desc: 'Produksi hormon tiroid kurang menyebabkan kelelahan, kenaikan berat badan, dan perlambatan metabolisme' },
+      { name: 'Sindrom Cushing', desc: 'Kelebihan kortisol (tumor adrenal atau penggunaan steroid) menyebabkan obesitas sentral dan osteoporosis' },
+      { name: 'Akromegali', desc: 'Kelebihan hormon pertumbuhan pada orang dewasa menyebabkan pembesaran tulang tangan, kaki, dan wajah' },
+    ],
+    interactions: [
+      { icon: '🧠', name: 'Saraf', desc: 'Hipotalamus menghubungkan saraf & hormon' },
+      { icon: '🫘', name: 'Ekskresi', desc: 'ADH & aldosteron atur fungsi ginjal' },
+      { icon: '🦴', name: 'Rangka', desc: 'GH, PTH, dan estrogen atur tulang' },
+    ],
+    tip: 'Menjaga keseimbangan hormonal: tidur 7-9 jam (mengoptimalkan sekresi GH dan melatonin), kelola stres (kortisol kronis merusak), olahraga rutin, konsumsi zinc dan selenium untuk tiroid yang sehat.',
+    quizzes: [
+      { q: 'Hormon apa yang menurunkan kadar gula darah?', opts: ['Glukagon', 'Kortisol', 'Insulin', 'Adrenalin'], ans: 2 },
+      { q: '"Master gland" yang mengontrol kelenjar endokrin lainnya adalah?', opts: ['Tiroid', 'Adrenal', 'Hipofisis', 'Pankreas'], ans: 2 },
+      { q: 'Hormon apa yang mengatur ritme tidur-bangun?', opts: ['Estrogen', 'Melatonin', 'Testosteron', 'Kortisol'], ans: 1 },
+    ]
+  },
+
+  imun: {
+    name: 'Imun',
+    latin: 'Systema Immune',
+    icon: '🛡️',
+    color: '#1a7a6e',
+    shortDesc: 'Sistem pertahanan berlapis yang mengenali dan menghancurkan patogen, racun, dan sel abnormal.',
+    fullDesc: `Sistem imun adalah militer internal tubuh — sebuah pasukan yang tersebar di seluruh tubuh, selalu siaga 24/7. Yang menakjubkan, sistem ini mampu membedakan jutaan molekul "diri" (self) dari molekul "asing" (non-self), menyerang yang asing dengan presisi, dan mengingat musuh yang pernah dihadapi untuk respons lebih cepat di masa depan. Kegagalan diskriminasi ini bisa menyebabkan autoimun (menyerang tubuh sendiri) atau alergi (bereaksi berlebihan terhadap hal tak berbahaya).`,
+    organs: [
+      { name: 'Sumsum Tulang', latin: 'Medulla Ossium', desc: 'Tempat lahir semua sel imun dari sel induk hematopoietik' },
+      { name: 'Kelenjar Timus', latin: 'Thymus', desc: 'Tempat sel T "bersekolah" dan belajar membedakan self vs non-self' },
+      { name: 'Limpa', latin: 'Splen/Lien', desc: 'Filter darah; memerangkap patogen dan sel darah merah tua' },
+      { name: 'Kelenjar Limfe', latin: 'Nodi Lymphatici', desc: 'Pos pemeriksaan yang menyaring limfe dan menginisiasi respons imun' },
+      { name: 'Sel T Limfosit', latin: 'Lymphocytus T', desc: 'T-killer: bunuh sel terinfeksi; T-helper: koordinasi respons imun' },
+      { name: 'Sel B Limfosit', latin: 'Lymphocytus B', desc: 'Memproduksi antibodi spesifik terhadap antigen yang dikenali' },
+      { name: 'Sel NK (Natural Killer)', latin: 'Cellula NK', desc: 'Menghancurkan sel kanker dan sel terinfeksi virus tanpa pengenalan antigen' },
+      { name: 'Makrofag & Neutrofil', latin: 'Macrophagus', desc: 'Sel fagositik yang "memakan" patogen; garis pertahanan pertama' },
+    ],
+    howItWorks: [
+      { title: 'Pertahanan Fisik & Kimia (Lini 1)', desc: 'Kulit yang utuh, mukosa, silia, asam lambung (pH 1-2), dan enzim lisozim di air mata dan saliva membentuk pertahanan pertama yang mencegah patogen masuk sama sekali.' },
+      { title: 'Imunitas Bawaan — Respons Cepat (Lini 2)', desc: 'Saat patogen menembus pertahanan pertama, sel dendritik dan makrofag mengenali pola molekular patogen (PAMP) via reseptor toll-like. Mereka memfagositosis patogen, melepas sitokin inflamasi (IL-1, TNF, IL-6) yang memicu demam, kemerahan, dan pembengkakan — respons inflamasi akut.' },
+      { title: 'Presentasi Antigen', desc: 'Makrofag dan sel dendritik yang menelan patogen memotong proteinnya menjadi fragmen antigen dan mempresentasikannya di permukaan via molekul MHC. Sel T-helper yang cocok mengenali kompleks MHC-antigen ini dan teraktivasi.' },
+      { title: 'Imunitas Adaptif — Presisi Tinggi (Lini 3)', desc: 'Sel T-helper yang aktif melepas sitokin untuk mengaktifkan sel B spesifik. Sel B berproliferasi menjadi sel plasma yang memproduksi antibodi spesifik dalam jumlah masif. Antibodi mengikat antigen (opsonisasi), menetralkan racun, atau mengaktifkan komplemen untuk menghancurkan patogen.' },
+      { title: 'Memori Imunologis', desc: 'Setelah infeksi teratasi, sebagian sel T dan B berdiferensiasi menjadi sel memori longevitas tinggi. Pada paparan berikutnya terhadap patogen yang sama, sel memori merespons dalam 1-3 hari (bukan 1-2 minggu), dengan intensitas jauh lebih tinggi — inilah dasar imunisasi.' },
+    ],
+    facts: [
+      { key: 'Sel imun dalam tubuh', val: '2 miliar+' },
+      { key: 'Antibodi unik yang bisa dibuat', val: '10 miliar jenis' },
+      { key: 'Waktu respons imun adaptif', val: '7–14 hari (pertama)' },
+      { key: 'Waktu respons sel memori', val: '1–3 hari' },
+      { key: 'Sel NK membunuh sel kanker', val: 'Setiap hari' },
+      { key: 'Panjang pembuluh limfe', val: '±26 km' },
+    ],
+    diseases: [
+      { name: 'HIV/AIDS', desc: 'Virus HIV menghancurkan sel T-helper (CD4+), melumpuhkan imunitas adaptif dan membuat tubuh rentan infeksi oportunistik' },
+      { name: 'Lupus (SLE)', desc: 'Autoimun menyerang jaringan sendiri — sendi, ginjal, kulit, otak; autoantibodi menyerang DNA sendiri' },
+      { name: 'Alergi', desc: 'Respons imun berlebihan (IgE-mediated) terhadap alergen tak berbahaya; anafilaksis bisa mengancam jiwa' },
+      { name: 'Imunodefisiensi', desc: 'Sistem imun lemah bawaan (SCID) atau didapat (kemoterapi) membuat tubuh rentan infeksi yang biasanya tak berbahaya' },
+    ],
+    interactions: [
+      { icon: '🫘', name: 'Ekskresi', desc: 'Ginjal buang kompleks antigen-antibodi' },
+      { icon: '🫃', name: 'Pencernaan', desc: '70% sel imun berada di usus (GALT)' },
+      { icon: '⚗️', name: 'Endokrin', desc: 'Kortisol menekan peradangan & imunitas' },
+    ],
+    tip: 'Perkuat sistem imun: tidur cukup (kurang tidur turunkan imunitas 50%), konsumsi vitamin C, D, zinc, dan selenium, kelola stres kronis, olahraga teratur sedang, dan vaksinasi sesuai jadwal.',
+    quizzes: [
+      { q: 'Sel apa yang memproduksi antibodi?', opts: ['Sel T-killer', 'Makrofag', 'Sel B (sel plasma)', 'Neutrofil'], ans: 2 },
+      { q: 'Dasar kerja vaksin adalah?', opts: ['Membunuh semua bakteri', 'Membentuk memori imunologis', 'Meningkatkan produksi darah', 'Memperkuat tulang'], ans: 1 },
+      { q: 'Di organ mana sel T "bersekolah" belajar membedakan self vs non-self?', opts: ['Limpa', 'Kelenjar limfe', 'Timus', 'Sumsum tulang'], ans: 2 },
+    ]
+  },
+
+  kulit: {
+    name: 'Integumen',
+    latin: 'Systema Integumentare',
+    icon: '🖐️',
+    color: '#8b5e3c',
+    shortDesc: 'Organ terbesar tubuh yang membentuk pelindung luar, mengatur suhu, dan berfungsi sebagai organ sensorik.',
+    fullDesc: `Kulit adalah organ terbesar tubuh, mencakup sekitar 2 m² dan seberat 4-5 kg. Jauh dari sekadar "pembungkus", kulit adalah organ multifungsi yang sangat kompleks: melindungi dari patogen, radiasi UV, dan cedera; mengatur suhu tubuh melalui keringat dan perubahan aliran darah; mensintesis vitamin D; menampung jutaan reseptor sensorik; dan bahkan berperan dalam imunitas. Kulit memperbarui dirinya sendiri setiap 28 hari — kita benar-benar mendapatkan "kulit baru" setiap bulan.`,
+    organs: [
+      { name: 'Epidermis', latin: 'Epidermis', desc: 'Lapisan terluar; keratinosit yang menghasilkan keratin pelindung; tidak ada pembuluh darah' },
+      { name: 'Dermis', latin: 'Dermis', desc: 'Lapisan tengah berisi kolagen, elastin, folikel rambut, kelenjar, dan pembuluh darah' },
+      { name: 'Hipodermis', latin: 'Hypodermis', desc: 'Lapisan terdalam berisi lemak subkutan untuk insulasi dan cadangan energi' },
+      { name: 'Melanosit', latin: 'Melanocytus', desc: 'Sel penghasil melanin yang menentukan warna kulit dan melindungi dari UV' },
+      { name: 'Kelenjar Keringat', latin: 'Glandula Sudorifera', desc: '2-4 juta kelenjar; ekrin (termoregulasi), apokrin (di ketiak/selangkangan)' },
+      { name: 'Folikel Rambut', latin: 'Folliculus Pili', desc: 'Struktur yang menghasilkan rambut; terhubung dengan otot arrector pili' },
+      { name: 'Kuku', latin: 'Unguis', desc: 'Lempeng keratin keras yang melindungi ujung jari; tumbuh ±3 mm per bulan' },
+      { name: 'Reseptor Sensorik', latin: 'Receptores Cutanei', desc: 'Meissner, Pacini, Ruffini, Merkel — merespons sentuhan, tekanan, suhu, nyeri' },
+    ],
+    howItWorks: [
+      { title: 'Penghalang Fisik dan Kimia', desc: 'Lapisan stratum corneum (sel mati berkeratin) di epidermis membentuk penghalang fisik impermeable. Film asam permukaan kulit (pH 4,5-5,5) menghambat pertumbuhan bakteri patogen. Tight junctions antar sel mencegah molekul besar menembus kulit.' },
+      { title: 'Termoregulasi', desc: 'Saat suhu tubuh naik: pembuluh darah di dermis berdilatasi (memerahkan kulit) untuk membuang panas, dan kelenjar keringat ekrin aktif (evaporasi mendinginkan kulit). Saat dingin: vasokonstriksi mengurangi aliran darah ke kulit, dan otot arrector pili berkontraksi (merinding) menjebak udara hangat.' },
+      { title: 'Sintesis Vitamin D', desc: 'Radiasi UV-B dari matahari mengubah 7-dehidrokolesterol di epidermis menjadi previtamin D₃, yang kemudian dikonversi oleh panas menjadi vitamin D₃ (kolekalsiferol). Ini selanjutnya diaktifkan di hati dan ginjal menjadi kalsitriol yang aktif secara biologis.' },
+      { title: 'Transduksi Sensorik', desc: 'Korpus Meissner (sentuhan ringan), Pacini (tekanan dan vibrasi), Merkel (tekanan statis), dan Ruffini (regangan kulit) mengubah rangsangan mekanik menjadi impuls saraf. Ujung saraf bebas mendeteksi nyeri, suhu, dan gatal. Kepadatan reseptor tertinggi di ujung jari dan bibir.' },
+      { title: 'Pembaruan Sel Kulit', desc: 'Sel induk di lapisan basal epidermis berproliferasi dan mendorong sel-sel tua ke atas. Saat bergerak ke permukaan, sel mengisi diri dengan keratin dan mati. Seluruh siklus ini membutuhkan 28-30 hari. Kita melepaskan sekitar 30.000-40.000 sel kulit mati per jam.' },
+    ],
+    facts: [
+      { key: 'Luas permukaan kulit', val: '~2 m²' },
+      { key: 'Berat kulit', val: '4–5 kg' },
+      { key: 'Sel kulit mati per jam', val: '30.000–40.000' },
+      { key: 'Siklus pembaruan kulit', val: '28–30 hari' },
+      { key: 'Jumlah kelenjar keringat', val: '2–4 juta' },
+      { key: 'Ketebalan kulit', val: '0,5–4 mm' },
+    ],
+    diseases: [
+      { name: 'Melanoma', desc: 'Kanker ganas dari melanosit; sering dipicu paparan UV berlebih; bisa menyebar cepat jika terlambat ditangani' },
+      { name: 'Psoriasis', desc: 'Autoimun mempercepat siklus sel kulit (3-4 hari vs 28 hari), menyebabkan plak merah bersisik' },
+      { name: 'Eksim (Dermatitis Atopik)', desc: 'Peradangan kulit kronis dengan gatal, kemerahan, dan kulit kering; sering berkaitan dengan alergi' },
+      { name: 'Luka Bakar', desc: 'Kerusakan kulit oleh panas, kimia, atau radiasi; derajat 3 merusak seluruh lapisan kulit dan memerlukan cangkok' },
+    ],
+    interactions: [
+      { icon: '🛡️', name: 'Imun', desc: 'Sel Langerhans kulit presentasi antigen' },
+      { icon: '🧠', name: 'Saraf', desc: 'Jutaan reseptor sensorik di kulit' },
+      { icon: '⚗️', name: 'Endokrin', desc: 'Kulit produksi vitamin D (prohormon)' },
+    ],
+    tip: 'Rawat kulit: gunakan tabir surya SPF 30+ setiap hari (mencegah penuaan dini dan kanker kulit), pelembap menjaga fungsi pelindung epidermis, minum air cukup, dan konsumsi antioksidan (vitamin C, E, beta-karoten).',
+    quizzes: [
+      { q: 'Sel apa di kulit yang memproduksi melanin (pigmen warna)?', opts: ['Keratinosit', 'Fibroblas', 'Melanosit', 'Sel Langerhans'], ans: 2 },
+      { q: 'Seberapa sering sel kulit (epidermis) memperbarui dirinya?', opts: ['Setiap 7 hari', 'Setiap 28 hari', 'Setiap 6 bulan', 'Setiap tahun'], ans: 1 },
+      { q: 'Vitamin apa yang disintesis kulit ketika terkena sinar matahari?', opts: ['Vitamin A', 'Vitamin B12', 'Vitamin C', 'Vitamin D'], ans: 3 },
+    ]
+  },
+
+  repro: {
+    name: 'Reproduksi',
+    latin: 'Systema Genitale',
+    icon: '🧬',
+    color: '#8b2252',
+    shortDesc: 'Sistem yang memungkinkan pembentukan keturunan melalui produksi sel kelamin dan perkembangan embrio.',
+    fullDesc: `Sistem reproduksi adalah sistem yang memastikan kelangsungan spesies. Di dalamnya terjadi salah satu proses paling menakjubkan dalam biologi: dua sel tunggal — spermatozoa dan oosit — bergabung membentuk satu sel (zigot) yang dalam 9 bulan berkembang menjadi manusia baru dengan triliunan sel terdiferensiasi. Sistem ini juga menghasilkan hormon seks yang mempengaruhi tidak hanya organ reproduksi, tetapi juga tulang, otak, jantung, dan kulit.`,
+    organs: [
+      { name: 'Testis', latin: 'Testis', desc: 'Memproduksi 200-500 juta spermatozoa per hari dan hormon testosteron' },
+      { name: 'Ovarium', latin: 'Ovarium', desc: 'Menghasilkan sel telur (oosit), estrogen, dan progesteron' },
+      { name: 'Tuba Falopi', latin: 'Tuba Uterina', desc: 'Tempat fertilisasi terjadi; silia mendorong oosit ke uterus' },
+      { name: 'Uterus (Rahim)', latin: 'Uterus', desc: 'Organ berotot tempat implantasi embrio dan perkembangan janin' },
+      { name: 'Epididimis', latin: 'Epididymis', desc: 'Tempat pematangan dan penyimpanan spermatozoa selama 2-3 minggu' },
+      { name: 'Plasenta', latin: 'Placenta', desc: 'Organ sementara yang menghubungkan ibu-janin untuk nutrisi dan gas' },
+    ],
+    howItWorks: [
+      { title: 'Spermatogenesis — Produksi Sperma', desc: 'Sel Sertoli di tubulus seminiferus testis memelihara sel induk sperma (spermatogonia). Melalui meiosis, spermatogonia berkembang menjadi spermatosit primer → spermatosit sekunder → spermatid → spermatozoa matang. Proses ini membutuhkan 64-74 hari dan suhu 2-3°C di bawah suhu tubuh (itulah mengapa testis berada di luar tubuh).' },
+      { title: 'Oogenesis & Siklus Menstruasi', desc: 'Wanita lahir dengan ~1-2 juta folikel primordial; hanya ~400 yang pernah berovulasi. Siklus 28 hari: FSH merangsang folikel tumbuh (hari 1-14), LH surge memicu ovulasi (hari 14), folikel yang pecah jadi korpus luteum yang menghasilkan progesteron (hari 14-28). Jika tidak ada fertilisasi, korpus luteum degenerasi, hormon turun, dan menstruasi terjadi.' },
+      { title: 'Fertilisasi', desc: 'Dari jutaan sperma yang diejakulasikan, hanya ratusan yang mencapai tuba falopi. Satu sperma menembus zona pelusida (lapisan pelindung oosit) menggunakan enzim akrosom, memicu depolarisasi membran oosit yang mencegah sperma lain masuk. Inti keduanya bergabung membentuk zigot 46 kromosom.' },
+      { title: 'Implantasi & Perkembangan Awal', desc: 'Zigot membelah terus-menerus sambil bergerak menuju uterus (3-4 hari). Pada hari ke-5-6, blastokista menempel ke endometrium (implantasi). Sel trofoblas menembus endometrium dan mulai menghasilkan hCG (hormon yang terdeteksi test kehamilan) yang mempertahankan korpus luteum.' },
+      { title: 'Perkembangan Embrio-Fetus (280 Hari)', desc: 'Minggu 1-8: fase embrio — pembentukan semua organ primer (organogenesis). Minggu 9-40: fase fetus — pertumbuhan dan pematangan. Trimester pertama kritis untuk organogenesis. Plasenta berkembang penuh pada trimester kedua, menjadi jembatan nutrisi, gas, antibodi maternal, dan hormon antara ibu dan janin.' },
+    ],
+    facts: [
+      { key: 'Sperma diproduksi per hari', val: '200–500 juta' },
+      { key: 'Durasi kehamilan', val: '280 hari' },
+      { key: 'Folikel telur saat lahir', val: '1–2 juta' },
+      { key: 'Sel telur pernah berovulasi', val: '~400 seumur hidup' },
+      { key: 'Waktu fertilisasi terjadi', val: 'Di tuba falopi' },
+      { key: 'hCG terdeteksi test kehamilan', val: 'Hari ke-10–14 post-fertilisasi' },
+    ],
+    diseases: [
+      { name: 'Infertilitas', desc: 'Ketidakmampuan konsepsi setelah 12 bulan berhubungan tanpa kontrasepsi; bisa faktor pria, wanita, atau keduanya' },
+      { name: 'Endometriosis', desc: 'Jaringan endometrium tumbuh di luar uterus (ovarium, tuba), menyebabkan nyeri hebat dan infertilitas' },
+      { name: 'PCOS', desc: 'Sindrom ovarium polikistik: ketidakseimbangan hormon menyebabkan gangguan ovulasi dan siklus menstruasi' },
+      { name: 'Kanker Serviks', desc: 'HPV menyebabkan perubahan sel abnormal di serviks; dapat dicegah vaksin HPV dan skrining Pap smear' },
+    ],
+    interactions: [
+      { icon: '⚗️', name: 'Endokrin', desc: 'FSH, LH, estrogen, testosteron' },
+      { icon: '🧠', name: 'Saraf', desc: 'Hipotalamus-hipofisis kontrol reproduksi' },
+      { icon: '🦴', name: 'Rangka', desc: 'Estrogen pertahankan kepadatan tulang' },
+    ],
+    tip: 'Menjaga kesehatan reproduksi: hindari rokok (merusak sperma dan egg quality), jaga berat badan ideal (obesitas ganggu hormonal), lakukan pemeriksaan rutin, dan vaksinasi HPV untuk perempuan usia 9-26 tahun.',
+    quizzes: [
+      { q: 'Di mana fertilisasi (pembuahan) umumnya terjadi?', opts: ['Uterus', 'Ovarium', 'Tuba Falopi', 'Vagina'], ans: 2 },
+      { q: 'Berapa lama proses spermatogenesis (sperma menjadi matang)?', opts: ['7 hari', '28 hari', '64–74 hari', '6 bulan'], ans: 2 },
+      { q: 'Hormon apa yang dideteksi oleh test kehamilan?', opts: ['Estrogen', 'Progesteron', 'FSH', 'hCG'], ans: 3 },
+    ]
+  }
+};
+
+// ============================================================
+// OVERVIEW CARDS
+// ============================================================
+const cardColors = {
+  kardio: '#c0392b', saraf: '#1a4a7a', napas: '#2a5a9a',
+  cerna: '#c8953a', rangka: '#5a4a3a', otot: '#c0581a',
+  ekskresi: '#5a2d82', endokrin: '#1a6b3c', imun: '#1a7a6e',
+  kulit: '#8b5e3c', repro: '#8b2252'
+};
+
+function buildOverviewCards() {
+  const grid = document.getElementById('overviewCards');
+  Object.entries(systemsData).forEach(([id, sys]) => {
+    const card = document.createElement('div');
+    card.className = 'sys-card';
+    card.style.setProperty('--card-color', cardColors[id]);
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-icon">${sys.icon}</div>
+        <div>
+          <div class="card-name">${sys.name}</div>
+          <div class="card-latin">${sys.latin}</div>
+        </div>
+      </div>
+      <div class="card-desc">${sys.shortDesc}</div>
+      <div class="card-tags">
+        ${sys.organs.slice(0,4).map(o => `<span class="card-tag">${o.name}</span>`).join('')}
+        ${sys.organs.length > 4 ? `<span class="card-tag">+${sys.organs.length - 4} lainnya</span>` : ''}
+      </div>
+      <div class="card-arrow">→</div>
+    `;
+    card.onclick = () => showSystemDetail(id);
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// QUIZ STATE
+// ============================================================
+let quizState = {};
+
+function initQuiz(id) {
+  quizState[id] = { current: 0, answered: false };
+}
+
+function renderQuiz(id) {
+  const sys = systemsData[id];
+  const state = quizState[id];
+  const q = sys.quizzes[state.current];
+
+  return `
+    <div class="quiz-section" id="quiz-${id}">
+      <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(245,240,232,0.4);margin-bottom:12px;">Uji Pemahaman</div>
+      <div class="quiz-q" id="qq-${id}">${q.q}</div>
+      <div class="quiz-opts" id="qopts-${id}">
+        ${q.opts.map((opt, i) => `
+          <button class="quiz-opt" onclick="answerQuiz('${id}', ${i}, ${q.ans})" id="qopt-${id}-${i}">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${id}"></div>
+      <div class="quiz-nav">
+        <span class="quiz-progress" id="qprog-${id}">Soal ${state.current + 1} / ${sys.quizzes.length}</span>
+        <button class="quiz-next" id="qnext-${id}" onclick="nextQuiz('${id}')">Soal Berikutnya →</button>
+      </div>
+    </div>
+  `;
+}
+
+function answerQuiz(id, chosen, correct) {
+  const state = quizState[id];
+  if (state.answered) return;
+  state.answered = true;
+
+  const opts = document.querySelectorAll(`[id^="qopt-${id}-"]`);
+  opts.forEach(o => o.disabled = true);
+
+  const chosenEl = document.getElementById(`qopt-${id}-${chosen}`);
+  const correctEl = document.getElementById(`qopt-${id}-${correct}`);
+  const fb = document.getElementById(`qfb-${id}`);
+  const nextBtn = document.getElementById(`qnext-${id}`);
+
+  if (chosen === correct) {
+    chosenEl.classList.add('correct');
+    fb.innerHTML = '<span style="color:#90e6b0;">✓ Benar! Bagus sekali.</span>';
+  } else {
+    chosenEl.classList.add('wrong');
+    correctEl.classList.add('correct');
+    fb.innerHTML = `<span style="color:#ffb4a8;">✗ Belum tepat. Jawaban benar: <strong>${systemsData[id].quizzes[state.current].opts[correct]}</strong></span>`;
+  }
+
+  const sys = systemsData[id];
+  if (state.current < sys.quizzes.length - 1) {
+    nextBtn.style.display = 'inline-block';
+  } else {
+    nextBtn.style.display = 'none';
+    fb.innerHTML += `<br><span style="color:rgba(245,240,232,0.5);font-size:11px;margin-top:8px;display:block;">Selesai! Semua soal telah dijawab.</span>`;
+  }
+}
+
+function nextQuiz(id) {
+  const state = quizState[id];
+  state.current++;
+  state.answered = false;
+
+  const sys = systemsData[id];
+  const q = sys.quizzes[state.current];
+
+  document.getElementById(`qq-${id}`).textContent = q.q;
+  document.getElementById(`qprog-${id}`).textContent = `Soal ${state.current + 1} / ${sys.quizzes.length}`;
+  document.getElementById(`qnext-${id}`).style.display = 'none';
+  document.getElementById(`qfb-${id}`).innerHTML = '';
+
+  const optsContainer = document.getElementById(`qopts-${id}`);
+  optsContainer.innerHTML = q.opts.map((opt, i) => `
+    <button class="quiz-opt" onclick="answerQuiz('${id}', ${i}, ${q.ans})" id="qopt-${id}-${i}">${opt}</button>
+  `).join('');
+}
+
+// ============================================================
+// DETAIL RENDERER
+// ============================================================
+function renderDetail(id) {
+  const sys = systemsData[id];
+  const col = sys.color;
+  initQuiz(id);
+
+  const organsRows = sys.organs.map(o => `
+    <tr>
+      <td>${o.name}</td>
+      <td>${o.latin}</td>
+      <td>${o.desc}</td>
+    </tr>
+  `).join('');
+
+  const diseasesHTML = sys.diseases.map(d => `
+    <div class="disease-card">
+      <div class="disease-name">⚠ ${d.name}</div>
+      <div class="disease-desc">${d.desc}</div>
+    </div>
+  `).join('');
+
+  const interHTML = sys.interactions.map(i => `
+    <div class="inter-card">
+      <div class="inter-icon">${i.icon}</div>
+      <div class="inter-name">${i.name}</div>
+      <div class="inter-desc">${i.desc}</div>
+    </div>
+  `).join('');
+
+  const flowHTML = sys.howItWorks.map((step, i) => `
+    <div class="flow-step">
+      <div class="flow-num">${i+1}</div>
+      <div class="flow-body">
+        <div class="flow-title">${step.title}</div>
+        <div class="flow-text">${step.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const factsHTML = sys.facts.map(f => `
+    <div class="fact-item">
+      <span class="fact-key">${f.key}</span>
+      <span class="fact-val">${f.val}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('detailContent').innerHTML = `
+    <button class="back-btn" onclick="showPage('overview')">← Kembali ke Gambaran Umum</button>
+
+    <div class="detail-layout" style="--sys-color: ${col}">
+      <div class="detail-main">
+        <!-- Hero -->
+        <div class="detail-hero" style="--sys-color:${col}">
+          <div class="detail-hero-head">
+            <div class="detail-big-icon">${sys.icon}</div>
+            <div>
+              <div class="detail-name">${sys.name}</div>
+              <div class="detail-latin-big">${sys.latin}</div>
+            </div>
+          </div>
+          <div class="detail-desc">${sys.fullDesc}</div>
+        </div>
+
+        <!-- Cara Kerja -->
+        <div class="section-block">
+          <div class="sec-title"><span>⚙️</span> Cara Kerja Sistem ${sys.name}</div>
+          <div class="flow-container" style="--sys-color:${col}">
+            ${flowHTML}
+          </div>
+        </div>
+
+        <!-- Organ & Komponen -->
+        <div class="section-block">
+          <div class="sec-title"><span>🔬</span> Organ & Komponen Utama</div>
+          <table class="organs-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Latin</th>
+                <th>Fungsi</th>
+              </tr>
+            </thead>
+            <tbody>${organsRows}</tbody>
+          </table>
+        </div>
+
+        <!-- Interaksi antar sistem -->
+        <div class="section-block">
+          <div class="sec-title"><span>🔗</span> Interaksi dengan Sistem Lain</div>
+          <div class="interaction-grid">${interHTML}</div>
+        </div>
+
+        <!-- Penyakit -->
+        <div class="section-block">
+          <div class="sec-title"><span>🏥</span> Gangguan & Penyakit Umum</div>
+          <div class="disease-grid">${diseasesHTML}</div>
+        </div>
+
+        <!-- Quiz -->
+        ${renderQuiz(id)}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="detail-sidebar">
+        <div class="fact-panel">
+          <div class="fact-panel-title">📊 Fakta & Data</div>
+          ${factsHTML}
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-head">💡 Tips Kesehatan</div>
+          <div class="tip-text">${sys.tip}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById('tab-' + pageId);
+  if (tab) { tab.classList.add('active'); tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+}
+
+function showSystemDetail(id) {
+  renderDetail(id);
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-detail').classList.add('active');
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById('tab-' + id);
+  if (tab) { tab.classList.add('active'); tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// INIT
+buildOverviewCards();
+</script>
+</body>
+</html>
